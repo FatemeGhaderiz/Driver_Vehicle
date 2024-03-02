@@ -19,7 +19,7 @@ def check_weekly_monthly_days( week_days, month_days, start_date , end_date):
      current_date = start_date
      while current_date <= end_date:
         if current_date.weekday() in week_days:
-            if current_date.day in month_days:
+            if str(current_date.day) in month_days:
                 return False
         current_date += datetime.timedelta(days=1)
      return True  
@@ -69,6 +69,16 @@ def check_driver_car_daily_monthly_shift(id, start_date, end_date, start_time, e
     
         return False
     return True    
+
+
+
+def check_daily_shift(id, start_date, end_date, start_time, end_time):
+    if (check_driver_car_daily_daily_shift(id, start_date, end_date, start_time, end_time) and 
+       check_driver_car_daily_weekly_shift(id, start_date, end_date, start_time, end_time) and
+       check_driver_car_daily_monthly_shift(id, start_date, end_date, start_time, end_time)) :
+        return True
+    return False
+        
 
 
 
@@ -141,13 +151,21 @@ def check_driver_car_weekly_monthly_shift(id, start_date, end_date, start_time, 
         
         for obj in shift:
             li = list(obj.days.split(","))
-            if check_weekly_monthly_days(weekdays,li,start_date,end_date):
+            if not(check_weekly_monthly_days(weekdays,li,start_date,end_date)):
+                print(obj)
+                print(check_weekly_monthly_days(weekdays,li,start_date,end_date))
                 return False
 
        
     return True   
 
 
+def check_weekly_shift(id, start_date, end_date, start_time, end_time, days):
+    if (check_driver_car_weekly_daily_shift(id, start_date, end_date, start_time, end_time) and 
+       check_driver_car_weekly_weekly_shift(id, start_date, end_date, start_time, end_time, days) and
+       check_driver_car_weekly_monthly_shift(id, start_date, end_date, start_time, end_time, days)) :
+        return True
+    return False
 
 
 # //////////////////////////////////////////////
@@ -188,7 +206,7 @@ def check_driver_car_monthly_weekly_shift(id, start_date, end_date, start_time, 
         
         for obj in shift:
             li = list(obj.days.split(","))
-            if check_monthly_weekly_days(month_days,li,start_date,end_date):
+            if not(check_monthly_weekly_days(month_days,li,start_date,end_date)):
                 return False
 
        
@@ -228,5 +246,10 @@ def check_driver_car_monthly_monthly_shift(id, start_date, end_date, start_time,
 
 
 
-
+def check_monthly_shift(id, start_date, end_date, start_time, end_time, days):
+    if (check_driver_car_monthly_daily_shift(id, start_date, end_date, start_time, end_time) and 
+       check_driver_car_monthly_weekly_shift(id, start_date, end_date, start_time, end_time, days) and
+       check_driver_car_monthly_monthly_shift(id, start_date, end_date, start_time, end_time, days)) :
+        return True
+    return False
 

@@ -6,7 +6,7 @@ from ..serializers import DailyShiftSerializer, WeeklyShiftSerializer, MonthlySh
 from ..services.shift_services import create_daily_shift, create_weekly_shift, create_monthly_shift
 from ..selectors.driver_shift import shift_object
 from ..selectors.driver_car import driver_car_shift
-from ..selectors.interference import check_driver_car_daily_daily_shift,check_driver_car_weekly_weekly_shift
+from ..selectors.interference import check_daily_shift, check_weekly_shift, check_monthly_shift
 
 
 
@@ -23,24 +23,26 @@ class AddDailyShiftApi(APIView):
     def post(self, request):
         serializer = DailyShiftSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        object_type=serializer.validated_data.get("object_type")
         try:
-            if check_driver_car_daily_daily_shift(
-                start_date=serializer.validated_data.get("date_start"),
-                end_date=serializer.validated_data.get("date_end"),
-                start_time=serializer.validated_data.get("time_start"),
-                end_time=serializer.validated_data.get("time_end"),
-                id=serializer.validated_data.get("object_id")
-            ):
-                create_daily_shift(
-                    date_start=serializer.validated_data.get("date_start"),
-                    date_end=serializer.validated_data.get("date_end"),
-                    time_start=serializer.validated_data.get("time_start"),
-                    time_end=serializer.validated_data.get("time_end"),
-                    object_type=serializer.validated_data.get("object_type"),
-                    object_id=serializer.validated_data.get("object_id")
-                )
-            else:
-                return  Response({"messege" : "errroooor"},status=status.HTTP_400_BAD_REQUEST)
+            if object_type == "appointment":
+                if check_daily_shift(
+                    start_date=serializer.validated_data.get("date_start"),
+                    end_date=serializer.validated_data.get("date_end"),
+                    start_time=serializer.validated_data.get("time_start"),
+                    end_time=serializer.validated_data.get("time_end"),
+                    id=serializer.validated_data.get("object_id")
+                ):
+                    create_daily_shift(
+                        date_start=serializer.validated_data.get("date_start"),
+                        date_end=serializer.validated_data.get("date_end"),
+                        time_start=serializer.validated_data.get("time_start"),
+                        time_end=serializer.validated_data.get("time_end"),
+                        object_type=serializer.validated_data.get("object_type"),
+                        object_id=serializer.validated_data.get("object_id")
+                    )
+                else:
+                    return  Response({"messege" : "errroooor"},status=status.HTTP_400_BAD_REQUEST)
         except Exception as ex:
             return Response(
                 {"detail": "Database Error - " + str(ex)},
@@ -59,27 +61,29 @@ class AddWeeklyShiftApi(APIView):
     def post(self, request):
         serializer = WeeklyShiftSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        object_type=serializer.validated_data.get("object_type")
         try:
+            if object_type == "appointment":
             
-            if check_driver_car_weekly_weekly_shift(
-                start_date=serializer.validated_data.get("date_start"),
-                end_date=serializer.validated_data.get("date_end"),
-                start_time=serializer.validated_data.get("time_start"),
-                end_time=serializer.validated_data.get("time_end"),
-                id=serializer.validated_data.get("object_id"),
-                days=serializer.validated_data.get("days")
-            ):
-                create_weekly_shift(
-                    date_start=serializer.validated_data.get("date_start"),
-                    date_end=serializer.validated_data.get("date_end"),
-                    time_start=serializer.validated_data.get("time_start"),
-                    time_end=serializer.validated_data.get("time_end"),
-                    object_type=serializer.validated_data.get("object_type"),
-                    object_id=serializer.validated_data.get("object_id"),
+                if check_weekly_shift(
+                    start_date=serializer.validated_data.get("date_start"),
+                    end_date=serializer.validated_data.get("date_end"),
+                    start_time=serializer.validated_data.get("time_start"),
+                    end_time=serializer.validated_data.get("time_end"),
+                    id=serializer.validated_data.get("object_id"),
                     days=serializer.validated_data.get("days")
-                )
-            else:
-                return Response({"messege" : "errroooor"},status=status.HTTP_400_BAD_REQUEST)
+                ):
+                    create_weekly_shift(
+                        date_start=serializer.validated_data.get("date_start"),
+                        date_end=serializer.validated_data.get("date_end"),
+                        time_start=serializer.validated_data.get("time_start"),
+                        time_end=serializer.validated_data.get("time_end"),
+                        object_type=serializer.validated_data.get("object_type"),
+                        object_id=serializer.validated_data.get("object_id"),
+                        days=serializer.validated_data.get("days")
+                    )
+                else:
+                    return Response({"messege" : "errroooor"},status=status.HTTP_400_BAD_REQUEST)
         except Exception as ex:
             return Response(
                 {"detail": "Database Error - " + str(ex)},
@@ -97,16 +101,29 @@ class AddMonthlyShiftApi(APIView):
     def post(self, request):
         serializer = MonthlyShiftSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        object_type=serializer.validated_data.get("object_type")
         try:
-            create_monthly_shift(
-                date_start=serializer.validated_data.get("date_start"),
-                date_end=serializer.validated_data.get("date_end"),
-                time_start=serializer.validated_data.get("time_start"),
-                time_end=serializer.validated_data.get("time_end"),
-                object_type=serializer.validated_data.get("object_type"),
-                object_id=serializer.validated_data.get("object_id"),
-                days=serializer.validated_data.get("days")
-            )
+            if object_type == "appointment":
+            
+                if check_monthly_shift(
+                    start_date=serializer.validated_data.get("date_start"),
+                    end_date=serializer.validated_data.get("date_end"),
+                    start_time=serializer.validated_data.get("time_start"),
+                    end_time=serializer.validated_data.get("time_end"),
+                    id=serializer.validated_data.get("object_id"),
+                    days=serializer.validated_data.get("days")
+                ):
+                    create_monthly_shift(
+                        date_start=serializer.validated_data.get("date_start"),
+                        date_end=serializer.validated_data.get("date_end"),
+                        time_start=serializer.validated_data.get("time_start"),
+                        time_end=serializer.validated_data.get("time_end"),
+                        object_type=serializer.validated_data.get("object_type"),
+                        object_id=serializer.validated_data.get("object_id"),
+                        days=serializer.validated_data.get("days")
+                    )
+                else:
+                    return Response({"messege" : "errroooor"},status=status.HTTP_400_BAD_REQUEST)     
         except Exception as ex:
             return Response(
                 {"detail": "Database Error - " + str(ex)},

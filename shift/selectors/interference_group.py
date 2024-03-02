@@ -2,9 +2,9 @@
 from django.db.models import Q
 
 from driver_vehicle_app.models import DriverGroup, DriversGroup, Driver, Appointment
-from .interference import check_driver_car_daily_daily_shift,check_driver_car_daily_weekly_shift,check_driver_car_daily_monthly_shift 
-from .interference import check_driver_car_weekly_daily_shift,check_driver_car_weekly_weekly_shift,check_driver_car_weekly_monthly_shift 
-from .interference import check_driver_car_monthly_daily_shift,check_driver_car_monthly_weekly_shift,check_driver_car_monthly_monthly_shift 
+from .interference import check_driver_car_daily_daily_shift, check_driver_car_daily_weekly_shift, check_driver_car_daily_monthly_shift 
+from .interference import check_driver_car_weekly_daily_shift, check_driver_car_weekly_weekly_shift, check_driver_car_weekly_monthly_shift 
+from .interference import check_driver_car_monthly_daily_shift, check_driver_car_monthly_weekly_shift, check_driver_car_monthly_monthly_shift 
 
 
 def find_drivers_of_group(id):
